@@ -84,15 +84,22 @@ export class QuizService {
         }
     }
 
-    async submitQuiz(quizId: number, sessionId: string, containerPort: string, level: number) {
+    async submitQuiz(
+        quizId: number,
+        sessionId: string,
+        containerPort: string,
+        level: number,
+        userAnswer?: string
+    ) {
         switch (quizId) {
             case 1:
                 return this.submitQuiz1(sessionId, containerPort, level);
             case 4:
                 // 컨테이너 생성하기
                 return this.submitQuiz4(sessionId, containerPort, level);
-            // case 5:
-            // 컨테이너 실행하기
+            case 5:
+                //컨테이너 실행하기
+                return this.submitQuiz5(sessionId, userAnswer, level);
             default:
                 throw new MethodNotAllowedException(`${quizId}번 퀴즈는 아직 채점할 수 없습니다.`);
         }
@@ -120,6 +127,17 @@ export class QuizService {
         );
         if (result.length > 0) {
             this.updateLevel(sessionId, level, 5);
+            return { quizResult: 'SUCCESS' };
+        } else {
+            return { quizResult: 'FAIL' };
+        }
+    }
+
+    private async submitQuiz5(sessionId: string, userAnswer: string | undefined, level: number) {
+        const answer = 'docker start';
+
+        if (userAnswer === answer) {
+            this.updateLevel(sessionId, level, 6);
             return { quizResult: 'SUCCESS' };
         } else {
             return { quizResult: 'FAIL' };

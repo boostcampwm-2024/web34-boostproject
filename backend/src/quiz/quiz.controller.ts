@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query, Req, UseGuards } from '@nestjs/common';
 import { QuizService } from './quiz.service';
 import { AuthGuard } from '../common/auth/auth.guard';
 import { RequestWithSession } from '../common/types/request';
@@ -17,12 +17,17 @@ export class QuizController {
 
     @Get('/:id/submit')
     @UseGuards(AuthGuard)
-    submitQuiz(@Param('id', ParseIntPipe) quizId: number, @Req() req: RequestWithSession) {
+    submitQuiz(
+        @Param('id', ParseIntPipe) quizId: number,
+        @Req() req: RequestWithSession,
+        @Query('userAnswer') userAnswer?: string
+    ) {
         const sessionId = req.cookies['sid'];
         const { containerPort, level } = req.session;
 
         this.quizService.accessQuiz(level, quizId);
-        return this.quizService.submitQuiz(quizId, sessionId, containerPort, level);
+
+        return this.quizService.submitQuiz(quizId, sessionId, containerPort, level, userAnswer);
     }
 
     @Get('/:id/access')
