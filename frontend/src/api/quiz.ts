@@ -28,9 +28,7 @@ const handleErrorResponse = (error: unknown, navigate: NavigateFunction) => {
 
 export const requestQuizData = async (quizNumber: string, navigate: NavigateFunction) => {
     try {
-        const response = await axios.get<Quiz>(
-            `${PROXY_URL}/api/quiz/${quizNumber}`
-        );
+        const response = await axios.get<Quiz>(`${PROXY_URL}/api/quiz/${quizNumber}`);
         return response.data;
     } catch (error) {
         return handleErrorResponse(error, navigate);
@@ -39,9 +37,7 @@ export const requestQuizData = async (quizNumber: string, navigate: NavigateFunc
 
 export const requestVisualizationData = async (navigate: NavigateFunction) => {
     try {
-        const response = await axios.get<Visualization>(
-            `${PROXY_URL}/api/sandbox/elements`
-        );
+        const response = await axios.get<Visualization>(`${PROXY_URL}/api/sandbox/elements`);
         return response.data;
     } catch (error) {
         return handleErrorResponse(error, navigate);
@@ -57,11 +53,39 @@ export const createHostContainer = async (navigate: NavigateFunction) => {
     }
 };
 
-export const requestSubmitResult = async (quizNumber: number, navigate: NavigateFunction) => {
+export const requestSubmitResult = async (
+    quizNumber: number,
+    userAnswer: string,
+    customQuizzes: number[],
+    navigate: NavigateFunction
+) => {
+    if (customQuizzes.includes(quizNumber)) {
+        return requestCustomQuizResult(quizNumber, userAnswer, navigate);
+    } else {
+        return requestDockerQuizResult(quizNumber, navigate);
+    }
+};
+
+const requestCustomQuizResult = async (
+    quizNumber: number,
+    userAnswer: string,
+    navigate: NavigateFunction
+) => {
     try {
-        const response = await axios.get<QuizResult>(
-            `${PROXY_URL}/api/quiz/${quizNumber}/submit`
-        );
+        const response = await axios.get<QuizResult>(`${PROXY_URL}/api/quiz/${quizNumber}/submit`, {
+            params: {
+                userAnswer,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        return handleErrorResponse(error, navigate);
+    }
+};
+
+const requestDockerQuizResult = async (quizNumber: number, navigate: NavigateFunction) => {
+    try {
+        const response = await axios.get<QuizResult>(`${PROXY_URL}/api/quiz/${quizNumber}/submit`);
         return response.data;
     } catch (error) {
         return handleErrorResponse(error, navigate);
@@ -75,10 +99,7 @@ export const requestCommandResult = async (
     term?: Terminal
 ) => {
     try {
-        const response = await axios.post<string>(
-            `${PROXY_URL}/api/sandbox/command`,
-            { command }
-        );
+        const response = await axios.post<string>(`${PROXY_URL}/api/sandbox/command`, { command });
         return response.data;
     } catch (error) {
         if (customErrorCallback && term) {
@@ -92,7 +113,7 @@ export const requestCommandResult = async (
 
 export const requestQuizAccessability = async (quizId: number) => {
     try {
-        await axios.get(`${PROXY_URL}/api/quiz/${quizId}/access`)
+        await axios.get(`${PROXY_URL}/api/quiz/${quizId}/access`);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             if (error.response && error.response.status === 403) {
@@ -102,4 +123,4 @@ export const requestQuizAccessability = async (quizId: number) => {
         throw error;
     }
     return true;
-}
+};

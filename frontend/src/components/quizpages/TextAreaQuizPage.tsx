@@ -5,8 +5,8 @@ import { requestQuizData } from '../../api/quiz';
 import DockerVisualization from '../visualization/DockerVisualization';
 import QuizDescription from '../quiz/QuizDescription';
 import XTerminal from '../quiz/XTerminal';
-import QuizButtons from '../quiz/QuizButtons';
 import useDockerVisualization from '../../hooks/useDockerVisualization';
+import QuizSubmitArea from '../quiz/QuizSubmitArea';
 
 const TextAreaQuizPage = () => {
     const navigate = useNavigate();
@@ -51,7 +51,7 @@ const TextAreaQuizPage = () => {
                 />
             </section>
             <XTerminal updateVisualizationData={updateVisualizationData} />
-            <QuizButtons quizId={+quizNum} />
+            <QuizSubmitArea quizId={+quizNum} />
         </div>
     );
 };

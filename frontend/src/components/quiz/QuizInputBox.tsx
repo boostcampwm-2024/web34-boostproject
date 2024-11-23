@@ -1,7 +1,9 @@
-import { useState } from 'react';
-const QuizInputBox = () => {
-    const [answer, setAnswer] = useState('');
+type QuizInputBoxProps = {
+    answer: string;
+    setAnswer: React.Dispatch<React.SetStateAction<string>>;
+};
 
+const QuizInputBox = ({ answer, setAnswer }: QuizInputBoxProps) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setAnswer(e.target.value);
     };

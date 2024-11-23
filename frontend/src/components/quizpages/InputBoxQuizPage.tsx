@@ -4,10 +4,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import DockerVisualization from '../visualization/DockerVisualization';
 import { Quiz } from '../../types/quiz';
 import QuizDescription from '../quiz/QuizDescription';
-import QuizButtons from '../quiz/QuizButtons';
 import XTerminal from '../quiz/XTerminal';
-import QuizInputBox from '../quiz/QuizInputBox';
 import useDockerVisualization from '../../hooks/useDockerVisualization';
+import QuizSubmitArea from '../quiz/QuizSubmitArea';
 
 const InputBoxQuizPage = () => {
     const navigate = useNavigate();
@@ -51,8 +50,7 @@ const InputBoxQuizPage = () => {
                 />
             </section>
             <XTerminal updateVisualizationData={updateVisualizationData} />
-            <QuizInputBox />
-            <QuizButtons quizId={+quizNum} />
+            <QuizSubmitArea quizId={+quizNum} />
         </div>
     );
 };

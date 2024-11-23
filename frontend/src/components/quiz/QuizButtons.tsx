@@ -2,13 +2,18 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { requestQuizAccessability, requestSubmitResult } from '../../api/quiz';
 
-const QuizButtons = ({ quizId }: { quizId: number }) => {
+type QuizButtonsProps = {
+    quizId: number;
+    answer: string;
+    customQuizzes: number[];
+};
+
+const QuizButtons = ({ quizId, answer, customQuizzes }: QuizButtonsProps) => {
     const [submitResult, setSubmitResult] = useState('default');
     const navigate = useNavigate();
 
     const handleSubmitButtonClick = async () => {
-        // TODO: 퀴즈 번호에 따라 request 쿼리 파라미터에 값이 추가될 수 있다.
-        const submitResponse = await requestSubmitResult(quizId, navigate);
+        const submitResponse = await requestSubmitResult(quizId, answer, customQuizzes, navigate);
         if (!submitResponse) {
             return;
         }
